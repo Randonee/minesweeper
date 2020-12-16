@@ -1,0 +1,110 @@
+<html>
+<head>
+<style>
+  body {
+    font-size: 12px;
+  }
+  a {
+    color: gray;
+  }
+  .number {
+    position:absolute;
+    color:white;
+    text-align: center;
+    width: 10px;
+    height: 10px;
+    line-height: 10px;
+  }
+
+  .bomb {
+    position:absolute;
+    color: red;
+    text-align: center;
+    width: 10px;
+    height: 10px;
+  }
+
+</style>
+<script language="javascript">
+var offset = 20;
+var size = 10;
+var numBombs = 10;
+var gridSize = 20;
+var map = [];
+
+function createMap() {
+  map = [];
+  for(var a=0; a < gridSize; ++a) {
+    map.push([])
+    for(var b=0; b < gridSize; ++b) {
+      map[a].push('-');
+    }
+  }
+
+  var bombsToPlace = numBombs;
+
+  while(bombsToPlace > 0) {
+    var x = Math.floor(Math.random() * gridSize);
+    var y = Math.floor(Math.random() * gridSize);
+    
+    if(map[x][y] === '-') {
+      map[x][y] = 'x';
+      --bombsToPlace;
+    }
+  }
+}
+
+function incrementPos(block, xAmount, yAmount) {
+  blocks[0].style.left = blocks[0].offsetLeft + xAmount * size;
+  blocks[0].style.top = blocks[0].offsetTop + yAmount * size;
+}
+
+function addElement(char, className, x, y) {
+  element = document.createElement('div');
+  element.className = className;
+  element.innerHTML = char;
+  element.style.left = x * size + offset;
+  element.style.top = y * size + offset;
+  document.body.appendChild(element);
+}
+
+function addNumber(num, x, y) {
+  addElement(num, 'number', x, y);
+}
+
+function addBomb(x, y) {
+  addElement('x', 'bomb', x, y);
+}
+
+function showAllBombs() {
+  for(var y=0; y < gridSize; ++y) {
+    for(var x=0; x < gridSize; ++x) {
+      if(map[y][x] === 'x') {
+        addBomb(x, y);
+      }
+    }
+  }
+}
+
+function onClick(e) {
+  var x = Math.floor( (e.clientX - offset) / size);
+  var y = Math.floor( (e.clientY - offset) / size);
+  addNumber(1, x, y);
+}
+
+function start() {
+  createMap();
+  console.log(map)
+}
+
+</script>
+</head>
+  <body style="height:100%; width:100%;" bgcolor="#000000" onload="start()" onclick="onClick(event)">
+    <div style="position:absolute;width:200px;height:200px;top:20px;left:20px;border: solid white 1px;" />
+    <div style="position:absolute;width:400px;height:200px;top:270px;left:20px; color:white;">
+      <br>Don't click on a bomb
+      <br>Refresh page to start a new game.
+      <br><a href="http://minesweeperonline.com/">Example</a>
+    </div>
+  </body>
+</html>
